@@ -1,0 +1,30 @@
+import csv
+final_data = []
+cart = []
+final_cart = []
+file = open("Products.csv","r")
+data = list(csv.reader(file,delimiter=","))
+for i in data:
+    final_data.append([i[0], i[1], int(i[2]), int(i[3])])
+for i in range(int(input("Eneter number of products to buy: "))):
+    prodcuts = input().split()
+    cart.append([(prodcuts[0].upper()),int(prodcuts[1])])
+print("Your Products: ")
+print(cart)
+for i in final_data:
+    for j in cart:
+        if (i[0] == j[0]):
+            if (i[3] >= j[1]):
+                final_cart.append(j)
+            elif (i[3] <= j[1] and i[3] != 0):
+                print("The quantity asked by u for",j[0],"is not available only",i[3],"is available do u want",i[3])
+                ch = input("Y/N: ").upper()
+                if (ch == 'Y'):
+                    final_cart.append(j)
+                else:
+                    print("Not enough stock available")
+                    continue
+            else:
+                print("Not enough stock available")
+print("Final Cart: ")
+print(final_cart)
