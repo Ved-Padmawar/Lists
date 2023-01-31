@@ -1,0 +1,68 @@
+import csv
+import pandas as pd
+
+final_data = []
+file = open("Products.csv","r")
+data = list(csv.reader(file,delimiter=","))
+for i in data:
+    final_data.append([i[0], i[1], int(i[2]), int(i[3])])
+df = pd.read_csv("Products.csv")
+List = []
+
+def customer_input(): 
+        print(df)
+        for i in range(int(input("Enter number of products to buy: "))):
+            items = input().split()
+            List.append([(items[0].upper()),int(items[1])])
+        shop(List)
+
+def shop(cart):
+    Total_amount = 0 
+    final_cart = []
+    file = open("Products.csv","r")
+    data = list(csv.reader(file,delimiter=","))
+    for i in data:
+        final_data.append([i[0], i[1], int(i[2]), int(i[3])])
+    print("Your Products: ")
+    print(cart)
+    for i in final_data:
+        for j in cart:
+            if (i[0] == j[0]):
+                if (i[3] >= j[1]):
+                    bill = i[2] * j[1]
+                    Total_amount = Total_amount + bill
+                    final_cart.append(j)
+                elif (i[3] <= j[1] and i[3] != 0):
+                    print("The quantity asked by u for",j[0],"is not available only",i[3],"is available do u want",i[3])
+                    ch = input("Y/N: ").upper()
+                    if (ch == 'Y'):
+                        del(cart[1])
+                        j[1] = i[3]
+                        bill = i[2] * j[1]
+                        Total_amount = Total_amount + bill
+                        final_cart.append(j)
+                    else:
+                        print("Not enough stock available",j[0])
+                        continue
+                else:
+                    print("Not enough stock available",j[0])
+    print("1.Checkout\n2.Continue Shopping")
+    continue_shopping = int(input("Enter your choice: "))
+    if (continue_shopping == 1):
+        reciept(final_data,final_cart,Total_amount)
+    else:
+        customer_input()
+    print("Final Cart: ")
+    print(final_cart)
+    print("Total amount to pay: ",Total_amount)
+
+def reciept(final_data,final_cart,Total_amount):
+    print("Receipt: ")
+    print("Product Name\tQuantity\tPrice\tAmount")
+    for i in final_cart:
+        for j in final_data:
+            if (i[0] == j[0]):
+                print(j[0],"\t\t",i[1],"\t\t",j[2],"\t",i[1]*j[2])
+                break
+    print("\nTotal amount to pay:", Total_amount)
+    exit()
